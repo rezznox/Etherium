@@ -4,6 +4,8 @@ using System.Collections;
 public class Movimiento : MonoBehaviour {
 
 	// Use this for initialization
+	
+	public float velocidad;
 	private float mousePosX; 
     private float mousePosY;
 	private Ray rayH;
@@ -24,7 +26,7 @@ public class Movimiento : MonoBehaviour {
 		    	mousePosY = hit.point.y;
 			}
 		}
-		transform.position = Vector3.Lerp(transform.position, new Vector3(mousePosX, mousePosY, 0), Time.deltaTime * 4);
-
+		transform.position = Vector3.MoveTowards(transform.position, new Vector3(mousePosX, mousePosY, 0), Time.deltaTime * velocidad);
+		transform.LookAt(new Vector3(mousePosX, mousePosY, 0));
 	}
 }
