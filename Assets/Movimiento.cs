@@ -7,7 +7,7 @@ public class Movimiento : MonoBehaviour {
 	
 	public float velocidad;
 	private float mousePosX; 
-    private float mousePosY;
+    private float mousePosZ;
 	private Ray rayH;
 	private RaycastHit hit;
 	
@@ -17,16 +17,18 @@ public class Movimiento : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetMouseButton(0))
+		if(Input.GetMouseButtonDown(0))
 		{
 			rayH = Camera.main.ScreenPointToRay (Input.mousePosition);
 			if(Physics.Raycast(rayH, out hit, 50))
 			{
 				mousePosX = hit.point.x; 
-		    	mousePosY = hit.point.y;
+		    	mousePosZ = hit.point.z;
 			}
 		}
-		transform.position = Vector3.MoveTowards(transform.position, new Vector3(mousePosX, mousePosY, 0), Time.deltaTime * velocidad);
-		transform.LookAt(new Vector3(mousePosX, mousePosY, 0));
+		if(mousePosX != 0 && mousePosZ != 0){
+			transform.position = Vector3.MoveTowards(transform.position, new Vector3(mousePosX, 0, mousePosZ), Time.deltaTime * velocidad);
+			transform.LookAt(new Vector3(mousePosX,0, mousePosZ));
+		}
 	}
 }
