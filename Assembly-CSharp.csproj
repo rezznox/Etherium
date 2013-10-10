@@ -44,13 +44,11 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Movimiento.cs" />
-     <Compile Include="Assets\MovimientoCamara.cs" />
-     <Compile Include="Assets\TimerTerreno.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="Assembly-UnityScript-firstpass.unityproj">
-      <Project>{A8F0377D-37B2-9FA1-3241-765B21EF159A}</Project>      <Name>Assembly-UnityScript-firstpass</Name>    </ProjectReference>
+     <Compile Include="Assets\Scripts\Movimiento.cs" />
+     <Compile Include="Assets\Scripts\MovimientoCamara.cs" />
+     <Compile Include="Assets\Scripts\Poder.cs" />
+     <Compile Include="Assets\Scripts\PoderesPersonaje.cs" />
+     <Compile Include="Assets\Scripts\TimerTerreno.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

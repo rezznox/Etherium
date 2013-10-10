@@ -21,7 +21,5 @@ public class TimerTerreno : MonoBehaviour {
 		if(escalaActual > 1){
 			transform.localScale = new Vector3(escalaActual - dif, escalaActual - dif,escalaActual - dif);
 		}
-		
-		Debug.Log("Tiempo restante: " + tiempoRestante);
 	}
 }
