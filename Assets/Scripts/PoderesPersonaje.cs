@@ -26,15 +26,16 @@ public class PoderesPersonaje : MonoBehaviour {
 			if(poderSeleccionado){
 				GameObject clon = (GameObject)Instantiate(Fireball,transform.position, transform.rotation);
 				Poder p = (Poder)clon.GetComponent(typeof(Poder));
-				
+				p.setCaster(this.gameObject);
+				Physics.IgnoreCollision(clon.collider,this.gameObject.collider);
 				rayH = Camera.main.ScreenPointToRay (Input.mousePosition);
 				if(Physics.Raycast(rayH, out hit, 50))
 				{
 					p.Disparar(hit.point.x, hit.point.z );
+					poderSeleccionado = false;
+					mov.NoMoverA(new Vector3(hit.point.x,0,hit.point.z));
+					mov.EncenderMovimiento();
 				}
-				
-				poderSeleccionado = false;
-				mov.EncenderMovimiento();
 			}
 		}
 		

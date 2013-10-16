@@ -37,6 +37,5 @@ public class MovimientoCamara : MonoBehaviour
           transform.Translate(new Vector3(0,1,0.6f) * scrollSpeed * Time.deltaTime); 
          }
     }
-
 }
 

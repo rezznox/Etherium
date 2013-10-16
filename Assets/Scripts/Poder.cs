@@ -12,11 +12,13 @@ public class Poder: MonoBehaviour{
 	private float mousePosX = 0; 
     private float mousePosZ = 0;
 	
+	private GameObject caster;
 	private bool disparar = false;
 	
 	void Update(){
 		if(disparar){
-			transform.position = Vector3.MoveTowards(transform.position, new Vector3(mousePosX, 0, mousePosZ), Time.deltaTime * velocidad);
+			iTween.MoveTo(this.gameObject, iTween.Hash("position",new Vector3(mousePosX,0,mousePosZ),"speed",velocidad));
+			iTween.LookTo(this.gameObject, new Vector3(mousePosX,0,mousePosZ),0.1f);
 		}
 		
 		if(transform.position.x == mousePosX && transform.position.z == mousePosZ){
@@ -27,8 +29,6 @@ public class Poder: MonoBehaviour{
 	void OnCollisionEnter(Collision collision){
 		GameObject objetivo = collision.gameObject;
 		if (objetivo.CompareTag ("Enemigo")){
-			Debug.Log("Booom");
-			//objetivo.rigidbody.AddExplosionForce(fuerza,transform.position,0);
 			objetivo.rigidbody.AddForce(transform.forward*fuerza);
 			this.renderer.enabled = false;
 		}
@@ -50,5 +50,9 @@ public class Poder: MonoBehaviour{
 	
 	public float darVelocidad(){
 		return velocidad;	
+	}
+	
+	public void setCaster(GameObject nCaster){
+		caster = nCaster;	
 	}
 }
