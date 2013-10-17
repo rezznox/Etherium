@@ -49,6 +49,7 @@
      <Compile Include="Assets\Scripts\Poder.cs" />
      <Compile Include="Assets\Scripts\PoderesPersonaje.cs" />
      <Compile Include="Assets\Scripts\TimerTerreno.cs" />
+     <Compile Include="Assets\Scripts\Vida.cs" />
      <Compile Include="Assets\iTween\Plugins\iTween.cs" />
      <Compile Include="Assets\iTween\Sample\MoveSample.cs" />
      <Compile Include="Assets\iTween\Sample\RotateSample.cs" />

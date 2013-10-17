@@ -28,8 +28,10 @@ public class Poder: MonoBehaviour{
 	
 	void OnCollisionEnter(Collision collision){
 		GameObject objetivo = collision.gameObject;
+		Vida vidaObjetivo = (Vida)objetivo.GetComponent(typeof(Vida));
 		if (objetivo.CompareTag ("Enemigo")){
 			objetivo.rigidbody.AddForce(transform.forward*fuerza);
+			vidaObjetivo.hayDanio(dano);
 			this.renderer.enabled = false;
 		}
 	}

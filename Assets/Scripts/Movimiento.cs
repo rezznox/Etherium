@@ -18,18 +18,17 @@ public class Movimiento : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-			if(movPermitido){
 				if(Input.GetMouseButtonDown(0))
 				{
 						rayH = Camera.main.ScreenPointToRay (Input.mousePosition);
-						//EncenderMovimiento();
+						EncenderMovimiento();
 						if(Physics.Raycast(rayH, out hit, 50))
 						{
 							mousePosX = hit.point.x; 
 		    				mousePosZ = hit.point.z;
 						}
 				}
-				if(mousePosX != 0 && mousePosZ != 0){
+				if(movPermitido){
 					Vector3 destino = new Vector3(mousePosX, 0, mousePosZ);
 					if(!destino.Equals(noMover)){
 						transform.position = Vector3.MoveTowards(transform.position, new Vector3(mousePosX, 0, mousePosZ), Time.deltaTime * velocidad);
@@ -41,9 +40,8 @@ public class Movimiento : MonoBehaviour {
 					&& mousePosZ-transform.position.z> -10E-2 && mousePosZ-transform.position.z < 10E-2)
 				{
 					Debug.Log("se apago el movimiento");
-					//ApagarMovimiento();
+					ApagarMovimiento();
 				}
-			}
 	}
 	
 	public void ApagarMovimiento(){
