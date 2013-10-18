@@ -17,7 +17,7 @@ public class Poder: MonoBehaviour{
 	
 	void Update(){
 		if(disparar){
-			iTween.MoveTo(this.gameObject, iTween.Hash("position",new Vector3(mousePosX,0,mousePosZ),"speed",velocidad));
+			iTween.MoveTo(this.gameObject, iTween.Hash("position",new Vector3(mousePosX,0.5f,mousePosZ),"speed",velocidad));
 			iTween.LookTo(this.gameObject, new Vector3(mousePosX,0,mousePosZ),0.1f);
 		}
 		

@@ -19,7 +19,7 @@ public class TimerTerreno : MonoBehaviour {
 		float escalaActual = transform.localScale.x;
 		
 		if(escalaActual > 1){
-			transform.localScale = new Vector3(escalaActual - dif, escalaActual - dif,escalaActual - dif);
+			transform.localScale = new Vector3(escalaActual - dif, 1,escalaActual - dif);
 		}
 	}
 }

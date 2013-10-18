@@ -24,6 +24,7 @@ public class Vida : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		
 		if(vida>100)
 		{
 			vida = 100;
@@ -42,20 +43,37 @@ public class Vida : MonoBehaviour {
   			 vida += healingRecibido;
   			 recibeHealing = false;
  		}
+		
+		
+		
 	}
 	
 	void OnGUI()
 	{
-		GUI.Box(new Rect(20, Screen.height-40, Screen.width-40, 25), vida+"/100");
+		int vidaAux = (int) vida;
+  		GUI.Box(new Rect(20, Screen.height-40, Screen.width-40, 25), vidaAux+"/100");
         GUI.Box(new Rect(20, Screen.height-40, (float)(vida * partesVida), 25), "");
 	}
 	
 	public void FixedUpdate ()
 	{
+		RaycastHit hit = new RaycastHit();
+		if (Physics.Raycast(transform.position,-Vector3.up, out hit,1)){
+			GameObject suelo = hit.transform.gameObject;
+			if(suelo.CompareTag("Terreno")){
+				enLava = false;
+				SendMessage("EnLava",false);
+			}
+		}
+		else{
+			enLava = true;
+			SendMessage("EnLava",true);
+		}
+		
 		if(enLava)
 		{
 			//gozala
-			vida -= 0.01;
+			vida -= 0.2;
 		}
 	}
 	

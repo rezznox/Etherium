@@ -5,15 +5,19 @@ public class Movimiento : MonoBehaviour {
 
 	// Use this for initialization
 	
-	public float velocidad;
+	public float velocidadNormal;
+	public float velocidadLava;
+	
+	private float vel;
 	private bool movPermitido = true;
 	private float mousePosX = 0; 
     private float mousePosZ = 0;
 	private Ray rayH;
 	private RaycastHit hit;
 	private Vector3 noMover;
-	void Start () {
 	
+	void Start () {
+		vel = velocidadNormal;	
 	}
 	
 	// Update is called once per frame
@@ -31,7 +35,7 @@ public class Movimiento : MonoBehaviour {
 				if(movPermitido){
 					Vector3 destino = new Vector3(mousePosX, 0, mousePosZ);
 					if(!destino.Equals(noMover)){
-						transform.position = Vector3.MoveTowards(transform.position, new Vector3(mousePosX, 0, mousePosZ), Time.deltaTime * velocidad);
+						transform.position = Vector3.MoveTowards(transform.position, new Vector3(mousePosX, 0.5f, mousePosZ), Time.deltaTime * vel);
 						Quaternion newRotation = Quaternion.LookRotation(transform.position - new Vector3(mousePosX, 0, mousePosZ), Vector3.up);
 						transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * 5);
 					}
@@ -58,5 +62,12 @@ public class Movimiento : MonoBehaviour {
 	
 	public void NoMoverA(Vector3 no){
 			noMover = no;
+	}
+	
+	public void EnLava(bool enLava){
+		if(enLava)
+			vel=velocidadLava;
+		else
+			vel = velocidadNormal;
 	}
 }
