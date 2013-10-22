@@ -36,7 +36,9 @@ public class Movimiento : MonoBehaviour {
 					Vector3 destino = new Vector3(mousePosX, 0, mousePosZ);
 					if(!destino.Equals(noMover)){
 						transform.position = Vector3.MoveTowards(transform.position, new Vector3(mousePosX, 0.5f, mousePosZ), Time.deltaTime * vel);
-						Quaternion newRotation = Quaternion.LookRotation(transform.position - new Vector3(mousePosX, 0, mousePosZ), Vector3.up);
+						Quaternion newRotation = Quaternion.LookRotation(new Vector3(mousePosX, 0, mousePosZ) - transform.position, Vector3.forward);
+						newRotation.x = 0;
+						newRotation.z = 0;
 						transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * 5);
 					}
 				}
