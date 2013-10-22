@@ -1,6 +1,8 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2008
 
+Project("{186B80A3-FB4F-617D-848A-1A85FB073A3C}") = "Etherium", "Assembly-CSharp-firstpass-vs.csproj", "{6FBA8ABA-D9E5-5955-FDD0-88CF45CBED95}"
+EndProject
 Project("{186B80A3-FB4F-617D-848A-1A85FB073A3C}") = "Etherium", "Assembly-CSharp-vs.csproj", "{4DB2D4AC-2B91-AA3A-BC89-043EF9594357}"
 EndProject
 Global
@@ -9,6 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6FBA8ABA-D9E5-5955-FDD0-88CF45CBED95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FBA8ABA-D9E5-5955-FDD0-88CF45CBED95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FBA8ABA-D9E5-5955-FDD0-88CF45CBED95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FBA8ABA-D9E5-5955-FDD0-88CF45CBED95}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4DB2D4AC-2B91-AA3A-BC89-043EF9594357}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4DB2D4AC-2B91-AA3A-BC89-043EF9594357}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4DB2D4AC-2B91-AA3A-BC89-043EF9594357}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -17,7 +23,7 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-																																				GlobalSection(MonoDevelopProperties) = preSolution
+																																							GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Assembly-CSharp.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1
