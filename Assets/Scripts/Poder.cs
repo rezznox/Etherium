@@ -6,6 +6,7 @@ public class Poder: MonoBehaviour{
 	public float fuerza;
 	public float dano;
 	public float velocidad;
+	public float cooldown;
 	
 	private Ray rayH;
 	private RaycastHit hit;
@@ -52,6 +53,10 @@ public class Poder: MonoBehaviour{
 	
 	public float darVelocidad(){
 		return velocidad;	
+	}
+	
+	public float darCooldown(){
+		return cooldown;	
 	}
 	
 	public void setCaster(GameObject nCaster){
