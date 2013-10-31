@@ -1,28 +1,38 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/*
+ * Administra todos los poderes de un personaje
+ */
 public class PoderesPersonaje : MonoBehaviour {
 	
-	public GameObject Fireball;
+//-------------------------------------------------------------
+// Atributos
+//-------------------------------------------------------------
 	
-	private Transform cast;
-	private GameObject poderActual;
-	private bool poderSeleccionado = false;
-	private Vector3 posDestino;
-	private Cooldown poderesEnCool;
+	public GameObject 	Fireball;					//Instancia del prefa de la fireball
 	
-	private Movimiento mov;
-	private Ray rayH;
-	private RaycastHit hit;
+	private GameObject 	poderActual;				//Poder que se va a disparar
+	private bool 		poderSeleccionado = false;	//Determina si un poder ha sido seleccionado o no
+	private Vector3 	posDestino;					//Vector destino del poder disparado
+	private Cooldown 	poderesEnCool;				//Relacion con el script de cooldown
 	
-	private int fireballOC = 1;
-	// Use this for initialization
+	private Movimiento 	mov;						//Relacion con el script de movimiento
+	private Ray 		rayH;						//RayCast para determinar el vector de movimiento
+	private RaycastHit 	hit;						//Infromacion de la colision del poder
+	
+	private int 		fireballOC = 1;				//Determina si la fireball esta en cooldown o no
+	
+//-------------------------------------------------------------
+// Metodos
+//-------------------------------------------------------------
+	
 	void Start () {
+		//Inicializa los componentes necesarios
 		mov = (Movimiento)GetComponent(typeof(Movimiento));
 		poderesEnCool = (Cooldown)GetComponent(typeof(Cooldown));
 	}
 	
-	// Update is called once per frame
 	void Update () {
 		if(Input.GetMouseButtonDown(0)){
 			if(poderSeleccionado){
@@ -36,13 +46,7 @@ public class PoderesPersonaje : MonoBehaviour {
 				rayH = Camera.main.ScreenPointToRay (Input.mousePosition);
 				if(Physics.Raycast(rayH, out hit, 50))
 				{
-					
-					//Rota hacia el objetivo
-					//Quaternion newRotation = Quaternion.LookRotation(new Vector3(hit.point.x, 0, hit.point.z) - transform.position, Vector3.forward);
-					//newRotation.x = 0;
-					//newRotation.z = 0;
-					//transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * 5);
-					
+					//Mira hacia el pbjetivo
 					Vector3 newRotation = new Vector3(hit.point.x, 0, hit.point.z);
 					transform.LookAt(newRotation);
 					
@@ -50,13 +54,16 @@ public class PoderesPersonaje : MonoBehaviour {
 					p.Disparar(hit.point.x, hit.point.z );
 					poderSeleccionado = false;
 					fireballOC = 0;
+					//Evita que el personaje se mueva al punto de lanzamiento
 					mov.NoMoverA(new Vector3(hit.point.x,0,hit.point.z));
 					mov.EncenderMovimiento();
+					//Coloca el poder en cooldown
 					poderesEnCool.PonerEnCooldown(Cooldown.FIREBALL, p.darCooldown());
 				}		
 			}
 		}
 		
+		//Selecciona la fireball con Q si el poder no esta en cooldown
 		if(Input.GetKeyDown(KeyCode.Q)){
 			if(fireballOC == 1){
 				poderActual = Fireball;
@@ -67,12 +74,18 @@ public class PoderesPersonaje : MonoBehaviour {
 		}
 	}
 	
+	/*
+	 * Dibuja los slots de cada poder en el HUD
+	 */
 	void OnGUI()
 	{
   		GUI.Box(new Rect(20, Screen.height-80,25, 25), "Fire");
         GUI.Box(new Rect(20*fireballOC, (Screen.height-80)*fireballOC, 25*fireballOC, 25*fireballOC), "");
 	}
 	
+	/*
+	 * Saca un poder del cooldown
+	 */
 	public void FinCooldown(int IDPoder){
 		if(IDPoder == Cooldown.FIREBALL){
 			fireballOC = 1;	
