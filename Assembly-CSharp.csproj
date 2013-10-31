@@ -45,6 +45,8 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\Cooldown.cs" />
+     <Compile Include="Assets\Scripts\Emitir.cs" />
+     <Compile Include="Assets\Scripts\Fuego.cs" />
      <Compile Include="Assets\Scripts\Movimiento.cs" />
      <Compile Include="Assets\Scripts\MovimientoCamara.cs" />
      <Compile Include="Assets\Scripts\Poder.cs" />
@@ -55,12 +57,15 @@
      <Compile Include="Assets\iTween\Sample\MoveSample.cs" />
      <Compile Include="Assets\iTween\Sample\RotateSample.cs" />
      <Compile Include="Assets\iTween\Sample\SampleInfo.cs" />
+     <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
      <None Include="Assets\Standard Assets\Water (Basic)\Sources\Shaders\FX-Water Simple.shader" />
      <None Include="Assets\iTween\ReadMe!\ReadMe!.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
       <Project>{6FBA8ABA-D9E5-5955-FDD0-88CF45CBED95}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
+    <ProjectReference Include="Assembly-UnityScript-firstpass.unityproj">
+      <Project>{A8F0377D-37B2-9FA1-3241-765B21EF159A}</Project>      <Name>Assembly-UnityScript-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -57,13 +57,24 @@ public class Vida : MonoBehaviour {
 	
 	public void FixedUpdate ()
 	{
-		RaycastHit hit = new RaycastHit();
-		if (Physics.Raycast(transform.position,-Vector3.up, out hit,1)){
-			GameObject suelo = hit.transform.gameObject;
-			if(suelo.CompareTag("Terreno")){
-				enLava = false;
-				SendMessage("EnLava",false);
-			}
+		bool tierra = false;
+		bool lava = false;
+		RaycastHit[] hits = Physics.RaycastAll(transform.position,-Vector3.up,1);
+		
+		int i = 0;
+		while(i < hits.Length){
+			GameObject suelo = hits[i].transform.gameObject;
+			if(suelo.CompareTag("Terreno"))
+				tierra = true;
+			if(suelo.CompareTag("Lava"))
+				lava = true;
+			
+			i++;
+		}
+		
+		if(tierra && lava){
+			enLava = false;
+			SendMessage("EnLava",false);
 		}
 		else{
 			enLava = true;
@@ -72,7 +83,6 @@ public class Vida : MonoBehaviour {
 		
 		if(enLava)
 		{
-			//gozala
 			vida -= 0.2;
 		}
 	}

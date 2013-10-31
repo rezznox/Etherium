@@ -45,18 +45,15 @@ public class Movimiento : MonoBehaviour {
 				if(mousePosX-transform.position.x> -10E-2 && mousePosX-transform.position.x < 10E-2
 					&& mousePosZ-transform.position.z> -10E-2 && mousePosZ-transform.position.z < 10E-2)
 				{
-					Debug.Log("se apago el movimiento");
 					ApagarMovimiento();
 				}
 	}
 	
 	public void ApagarMovimiento(){
-		Debug.Log("movimiento apagado");
 		movPermitido = false;	
 	}
 	
 	public void EncenderMovimiento(){
-		Debug.Log("movimiento encendido");
 		mousePosX = 0;
 		mousePosZ = 0;
 		movPermitido = true;
