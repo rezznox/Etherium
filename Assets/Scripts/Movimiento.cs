@@ -20,9 +20,16 @@ public class Movimiento : MonoBehaviour {
 	private Ray 		rayH;					//RayCast para determinar la posciion del personaje
 	private RaycastHit 	hit;					//Guarda la informacion de colision del RayCast
 	private Vector3 	noMover;				//Controla glitches de movimiento en el plano
+	private bool hayFuerzaExterna;
+	private int fuerzaExterna;
+	private Vector3 destinoCalculado;
+	private Vector3 movimiento;
 	
 	void Start () {
-		vel = velocidadNormal;	
+		vel = velocidadNormal;
+		destinoCalculado = new Vector3(30,0.5f,-30);
+		movimiento = new Vector3(0,0,0);
+		hayFuerzaExterna = true;
 	}
 	
 //----------------------------------------------------------------
@@ -44,8 +51,28 @@ public class Movimiento : MonoBehaviour {
 		if(movPermitido){
 			Vector3 destino = new Vector3(mousePosX, 0, mousePosZ);
 			if(!destino.Equals(noMover)){
-				//Determina la posicion objetivo
-				transform.position = Vector3.MoveTowards(transform.position, new Vector3(mousePosX, 0.5f, mousePosZ), Time.deltaTime * vel);
+				movimiento.x = mousePosX;
+				movimiento.z = mousePosZ;
+				//No hay ninguna fuerza externa actuando por lo que el personaje se mueve normal
+				if(!hayFuerzaExterna)
+				{
+					transform.position = Vector3.MoveTowards(transform.position, movimiento, Time.deltaTime * vel);
+				}
+				//Hay una fuerza externa por lo tanto se hace un calculo de nueva posicion destino depdendiendo hacia donde
+				//el jugador este queriendo ir
+				else
+				{
+					//se calcula la nueva posicion destino tomando en cuenta donde se da click
+					destinoCalculado = (destinoCalculado + (movimiento.normalized));
+					Debug.Log(destinoCalculado);
+					//se hace la animacion
+					iTween.MoveUpdate(gameObject, destinoCalculado, Mathf.Abs((destinoCalculado-movimiento).magnitude*2));
+				}
+				//El cuerpo ha llegado a su destino por una fuerza externa por lo que ya no se ejerce nada contra el
+				if(destinoCalculado.x-transform.position.x> -10E-2 && destinoCalculado.x-transform.position.x < 10E-2
+					&& destinoCalculado.z-transform.position.z> -10E-2 && destinoCalculado.z-transform.position.z < 10E-2){
+					hayFuerzaExterna = false;
+				}
 				//Rota al personaje
 				Quaternion newRotation = Quaternion.LookRotation(new Vector3(mousePosX, 0, mousePosZ) - transform.position, Vector3.forward);
 				newRotation.x = 0;
@@ -91,5 +118,9 @@ public class Movimiento : MonoBehaviour {
 			vel=velocidadLava;
 		else
 			vel = velocidadNormal;
+	}
+	public void HayFuerzaExterna()
+	{
+		hayFuerzaExterna = true;
 	}
 }
