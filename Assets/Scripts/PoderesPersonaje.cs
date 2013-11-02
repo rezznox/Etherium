@@ -11,7 +11,7 @@ public class PoderesPersonaje : MonoBehaviour {
 //-------------------------------------------------------------
 	
 	public GameObject 	Fireball;					//Instancia del prefa de la fireball
-	
+	public Transform 	ParticulasFireball;			//Sistema de particulas para la fireball
 	private GameObject 	poderActual;				//Poder que se va a disparar
 	private bool 		poderSeleccionado = false;	//Determina si un poder ha sido seleccionado o no
 	private Vector3 	posDestino;					//Vector destino del poder disparado
@@ -40,6 +40,7 @@ public class PoderesPersonaje : MonoBehaviour {
 				GameObject clon = (GameObject)Instantiate(poderActual,transform.position, transform.rotation);
 				Poder p = (Poder)clon.GetComponent(typeof(Poder));
 				p.setCaster(this.gameObject);
+				p.setParticulas(ParticulasFireball);
 				Physics.IgnoreCollision(clon.collider,this.gameObject.collider);
 				
 				//Lanza el poder

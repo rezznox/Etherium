@@ -10,17 +10,20 @@ public class Poder: MonoBehaviour{
 // Atributos
 //-----------------------------------------------------------------
 	
-	public float 		fuerza;				//Fuerza de empuje del poder		
-	public float 		dano;				//Daño que ocaciona el poder
-	public float 		velocidad;			//Velocidad de movimiento del poder
-	public float 		cooldown;			//Tiempo de cooldown del poder
+	public float 		fuerza;							//Fuerza de empuje del poder		
+	public float 		dano;							//Daño que ocaciona el poder
+	public float 		velocidad;						//Velocidad de movimiento del poder
+	public float 		cooldown;						//Tiempo de cooldown del poder
+			
+	private float 		mousePosX = 0;					//Posicion del poder en x 
+    private float 		mousePosZ = 0;					//Posicion del poder en y
 	
-	private float 		mousePosX = 0;		//Posicion del poder en x 
-    private float 		mousePosZ = 0;		//Posicion del poder en y
+	private GameObject 	caster;							//Personaje que disparo el poder
+	private bool 		disparar = false;				//Determina si puede disparar o no un poder
+	private Vector3 	destino;
 	
-	private GameObject 	caster;				//Personaje que disparo el poder
-	private bool 		disparar = false;	//Determina si puede disparar o no un poder
-	private Vector3 destino;
+	private Transform 	particulas;
+	private bool 		particulaInstanceadas = false;
 	
 //-----------------------------------------------------------------
 // Metodos
@@ -35,6 +38,15 @@ public class Poder: MonoBehaviour{
 					&& mousePosZ-transform.position.z> -10E-2 && mousePosZ-transform.position.z < 10E-2)
 		{
 			Destroy(this.gameObject);	
+		}
+		
+		if(!particulaInstanceadas && particulas != null)
+		{
+			Object objeto = Instantiate(particulas, transform.position, transform.rotation);
+			Transform t = (Transform)objeto;
+			particulaInstanceadas = true;
+			t.parent = transform;
+			t.name = "Fuego!";
 		}
 	}
 	
@@ -137,5 +149,10 @@ public class Poder: MonoBehaviour{
 	
 	public void setCaster(GameObject nCaster){
 		caster = nCaster;	
+	}
+	
+	public void setParticulas(Transform sistema)
+	{
+		particulas = sistema;
 	}
 }
