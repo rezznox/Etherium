@@ -89,7 +89,7 @@ public class Poder: MonoBehaviour{
 				addZ+=fuerza/2;
 			*/
 			Vector3 target = new Vector3((objetivo.transform.position.x + posicionColision.x*4), objetivo.transform.position.y,(objetivo.transform.position.z + posicionColision.z*4));
-			iTween.MoveTo(objetivo, target, 20);
+			iTween.MoveTo(objetivo, target, 10);
 			//iTween.mo
 			/*if(empuje.x < 0.0f ){
 				Debug.Log("X -1");
