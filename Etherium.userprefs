@@ -1,10 +1,13 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\MovimientoCamara.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PoderesPersonaje.cs">
     <Files>
-      <File FileName="Assets\ConnectionManager.cs" Line="16" Column="50" />
+      <File FileName="Assets\Scripts\ConnectionManager.cs" Line="37" Column="35" />
+      <File FileName="Assets\Scripts\PoderesPersonaje.cs" Line="10" Column="53" />
+      <File FileName="Assets\Scripts\Movimiento.cs" Line="10" Column="47" />
       <File FileName="Assets\Scripts\Fuego.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\MovimientoCamara.cs" Line="22" Column="4" />
+      <File FileName="Assets\Scripts\Menu.cs" Line="82" Column="10" />
+      <File FileName="Assets\Photon Unity Networking\Plugins\PhotonNetwork\PhotonNetwork.cs" Line="1218" Column="71" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

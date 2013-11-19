@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
+
+[RequireComponent(typeof(PhotonView))]
 
 /*
  * Script que controla el movimiento de los personajes
  */
-public class Movimiento : MonoBehaviour {
+public class Movimiento : Photon.MonoBehaviour{
 
 //----------------------------------------------------------------
 // Atributos
@@ -31,6 +34,12 @@ public class Movimiento : MonoBehaviour {
 	private bool esSeguido = false;
 	private bool hayGolpe = true;
 	
+	/*
+	 * Variables de sincronizacion
+	 */
+	private Vector3 latestCorrectPos;
+    private Quaternion latestCorretRot;
+	
 	void Start () {
 		vel = velocidadNormal;
 		contadorMuestreos = 0;
@@ -38,7 +47,20 @@ public class Movimiento : MonoBehaviour {
 		destinoFuerza = destinoCalculado;
 		movimiento = new Vector3(0,0,0);
 		hayFuerzaExterna = true;
+		
 	}
+	public void Awake()
+    {
+        this.enabled = true;   // due to this, Update() is not called on the owner client.
+
+        latestCorrectPos = transform.position;
+        latestCorretRot = transform.rotation;
+		if (!photonView.isMine)
+        {
+            //MINE: local player, simply enable the local scripts
+            this.enabled = false;
+        }
+    }
 	
 //----------------------------------------------------------------
 // Metodos
@@ -80,10 +102,10 @@ public class Movimiento : MonoBehaviour {
 				//No hay ninguna fuerza externa actuando por lo que el personaje se mueve normal
 				if(hayFuerzaExterna && vel.magnitude <2)
 				{
-					transform.position = Vector3.MoveTowards(transform.position, movimiento, Time.deltaTime *2);
+					//transform.position = Vector3.MoveTowards(transform.position, movimiento, Time.deltaTime *2);
 					if((movimiento-vel).magnitude > -1 || (movimiento-vel).magnitude < 1)
 					{
-						rigidbody.AddForce((movimiento- transform.position).normalized);
+						rigidbody.AddForce((movimiento- transform.position).normalized*3);
 						Debug.Log(vel.magnitude);
 						//rigidbody.AddForce(new Vector3(10,0.5f,10));
 					}
@@ -148,4 +170,21 @@ public class Movimiento : MonoBehaviour {
 	{
 		hayFuerzaExterna = true;
 	}
+	//sincronizacion con el servidor
+	
+	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.isWriting)
+        {
+            //We own this player: send the others our data
+            stream.SendNext(transform.position);
+            stream.SendNext(transform.rotation); 
+        }
+        else
+        {
+            //Network player, receive data
+            latestCorrectPos = (Vector3)stream.ReceiveNext();
+            latestCorretRot = (Quaternion)stream.ReceiveNext();
+        }
+    }
 }

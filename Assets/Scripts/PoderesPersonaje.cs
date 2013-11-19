@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
+
+[RequireComponent(typeof(PhotonView))]
 
 /*
  * Administra todos los poderes de un personaje
  */
-public class PoderesPersonaje : MonoBehaviour {
+public class PoderesPersonaje : Photon.MonoBehaviour{
 	
 //-------------------------------------------------------------
 // Atributos
@@ -31,6 +34,11 @@ public class PoderesPersonaje : MonoBehaviour {
 		//Inicializa los componentes necesarios
 		mov = (Movimiento)GetComponent(typeof(Movimiento));
 		poderesEnCool = (Cooldown)GetComponent(typeof(Cooldown));
+		if (!photonView.isMine)
+        {
+            //MINE: local player, simply enable the local scripts
+            this.enabled = false;
+        }
 	}
 	
 	void Update () {
