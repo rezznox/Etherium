@@ -14,6 +14,7 @@ public class Cooldown : MonoBehaviour {
 	 * Constantes para identificar todos los poderes existentes
 	 */
 	public const int FIREBALL = 0;
+	public const int TELEPORT = 1;
 	
 	// Lista que maneja los podres que se encuentran en cooldown
 	float[] listaCooldowns = new float[10];

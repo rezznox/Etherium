@@ -14,7 +14,8 @@ public class Poder: MonoBehaviour{
 	public float 		dano;							//Daño que ocaciona el poder
 	public float 		velocidad;						//Velocidad de movimiento del poder
 	public float 		cooldown;						//Tiempo de cooldown del poder
-			
+	
+	private int 		Id;								//Identificador del poder
 	private float 		mousePosX = 0;					//Posicion del poder en x 
     private float 		mousePosZ = 0;					//Posicion del poder en y
 	
@@ -31,7 +32,12 @@ public class Poder: MonoBehaviour{
 	
 	void Update(){
 		if(disparar){
-			transform.position = Vector3.MoveTowards(transform.position, destino, Time.deltaTime * 7);
+			if(Id == Cooldown.FIREBALL){
+				transform.position = Vector3.MoveTowards(transform.position, destino, Time.deltaTime * 7);
+			}
+			else if(Id == Cooldown.TELEPORT){
+				Debug.Log("Teleport!!!!!");
+			}
 		}
 		
 		if(mousePosX-transform.position.x> -10E-2 && mousePosX-transform.position.x < 10E-2
@@ -154,5 +160,13 @@ public class Poder: MonoBehaviour{
 	public void setParticulas(Transform sistema)
 	{
 		particulas = sistema;
+	}
+	
+	public void setId(int id){
+	 	Id = id;	
+	}
+	
+	public int getId(){
+		return Id;	
 	}
 }

@@ -13,9 +13,14 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 // Atributos
 //-------------------------------------------------------------
 	
-	public GameObject 	Fireball;					//Instancia del prefa de la fireball
+	public GameObject 	Fireball;					//Instancia del prefab de la fireball
+	public GameObject 	Teleport;					//Instancia del prefab del teleport
 	public Transform 	ParticulasFireball;			//Sistema de particulas para la fireball
+	public Transform 	ParticulasTeleport;			//Sistema de particulas para el teleport
+	
 	private GameObject 	poderActual;				//Poder que se va a disparar
+	private Poder 		instanciaPoder;				//Instancia del poder que se esta disparando
+	private Transform   particulasActual;			//Sistema de particulas del poder actual
 	private bool 		poderSeleccionado = false;	//Determina si un poder ha sido seleccionado o no
 	private Vector3 	posDestino;					//Vector destino del poder disparado
 	private Cooldown 	poderesEnCool;				//Relacion con el script de cooldown
@@ -25,6 +30,7 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 	private RaycastHit 	hit;						//Infromacion de la colision del poder
 	
 	private int 		fireballOC = 1;				//Determina si la fireball esta en cooldown o no
+	private int 		teleportOC = 1;				//Determina si el teleport esta en cooldown o no
 	
 //-------------------------------------------------------------
 // Metodos
@@ -44,13 +50,6 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 	void Update () {
 		if(Input.GetMouseButtonDown(0)){
 			if(poderSeleccionado){
-				//Crea el poder
-				GameObject clon = (GameObject)Instantiate(poderActual,transform.position, transform.rotation);
-				Poder p = (Poder)clon.GetComponent(typeof(Poder));
-				p.setCaster(this.gameObject);
-				p.setParticulas(ParticulasFireball);
-				Physics.IgnoreCollision(clon.collider,this.gameObject.collider);
-				
 				//Lanza el poder
 				rayH = Camera.main.ScreenPointToRay (Input.mousePosition);
 				if(Physics.Raycast(rayH, out hit, 50))
@@ -60,14 +59,20 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 					transform.LookAt(newRotation);
 					
 					//Lanzamiento
-					p.Disparar(hit.point.x, hit.point.z );
+					instanciaPoder.Disparar(hit.point.x, hit.point.z );
 					poderSeleccionado = false;
-					fireballOC = 0;
 					//Evita que el personaje se mueva al punto de lanzamiento
 					mov.NoMoverA(new Vector3(hit.point.x,0,hit.point.z));
 					mov.EncenderMovimiento();
 					//Coloca el poder en cooldown
-					poderesEnCool.PonerEnCooldown(Cooldown.FIREBALL, p.darCooldown());
+					if(instanciaPoder.getId() == Cooldown.FIREBALL){
+						fireballOC = 0;
+						poderesEnCool.PonerEnCooldown(Cooldown.FIREBALL, instanciaPoder.darCooldown());
+					}
+					else if(instanciaPoder.getId() == Cooldown.TELEPORT){
+						teleportOC = 0;
+						poderesEnCool.PonerEnCooldown(Cooldown.TELEPORT, instanciaPoder.darCooldown());
+					}
 				}		
 			}
 		}
@@ -76,6 +81,24 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 		if(Input.GetKeyDown(KeyCode.Q)){
 			if(fireballOC == 1){
 				poderActual = Fireball;
+				particulasActual = ParticulasFireball;
+				poderSeleccionado = true;
+				mov.ApagarMovimiento();
+				
+				GameObject clon = (GameObject)Instantiate(poderActual,transform.position, transform.rotation);
+				clon.transform.parent = transform;
+				instanciaPoder = (Poder)clon.GetComponent(typeof(Poder));
+				instanciaPoder.setCaster(this.gameObject);
+				instanciaPoder.setParticulas(particulasActual);
+				instanciaPoder.setId(Cooldown.FIREBALL);
+				Physics.IgnoreCollision(clon.collider,this.gameObject.collider);
+				Debug.Log("Poder seleccionado");
+			}
+		}
+		
+		if(Input.GetKeyDown(KeyCode.W)){
+			if(teleportOC == 1){
+				poderActual = Teleport;
 				poderSeleccionado = true;
 				mov.ApagarMovimiento();
 				Debug.Log("Poder seleccionado");
@@ -90,6 +113,9 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 	{
   		GUI.Box(new Rect(20, Screen.height-80,25, 25), "Fire");
         GUI.Box(new Rect(20*fireballOC, (Screen.height-80)*fireballOC, 25*fireballOC, 25*fireballOC), "");
+		
+		GUI.Box(new Rect(50, Screen.height-80,25, 25), "Tele");
+        GUI.Box(new Rect(20*teleportOC, (Screen.height-80)*teleportOC, 25*teleportOC, 25*teleportOC), "");
 	}
 	
 	/*
