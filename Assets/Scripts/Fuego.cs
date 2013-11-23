@@ -21,7 +21,6 @@ public class Fuego : MonoBehaviour {
 	
 	public void FixedUpdate ()
 	{
-		Debug.Log("Esta en lava: " + enLava);
 		if(!enLava){
 			
 			bool tierra = false;

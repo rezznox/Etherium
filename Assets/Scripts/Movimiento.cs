@@ -2,7 +2,7 @@
 using System.Collections;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-[RequireComponent(typeof(PhotonView))]
+//[RequireComponent(typeof(PhotonView))]
 
 /*
  * Script que controla el movimiento de los personajes
@@ -23,16 +23,16 @@ public class Movimiento : Photon.MonoBehaviour{
 	private Ray 		rayH;					//RayCast para determinar la posciion del personaje
 	private RaycastHit 	hit;					//Guarda la informacion de colision del RayCast
 	private Vector3 	noMover;				//Controla glitches de movimiento en el plano
-	private bool hayFuerzaExterna;
-	private int fuerzaExterna;
-	private Vector3 destinoCalculado;
-	private Vector3 movimiento;
-	private Vector3 _prevPosition;
-	private bool inicializacion = false;
-	private Vector3 destinoFuerza;
-	private int contadorMuestreos;
-	private bool esSeguido = false;
-	private bool hayGolpe = true;
+	private bool 		hayFuerzaExterna;
+	private int 		fuerzaExterna;
+	private Vector3 	destinoCalculado;
+	private Vector3 	movimiento;
+	private Vector3 	_prevPosition;
+	private bool 		inicializacion = false;
+	private Vector3 	destinoFuerza;
+	private int 		contadorMuestreos;
+	private bool 		esSeguido = false;
+	private bool 		hayGolpe = true;
 	
 	/*
 	 * Variables de sincronizacion
@@ -51,7 +51,7 @@ public class Movimiento : Photon.MonoBehaviour{
 	}
 	public void Awake()
     {
-        this.enabled = true;   // due to this, Update() is not called on the owner client.
+      /*  this.enabled = true;   // due to this, Update() is not called on the owner client.
 
         latestCorrectPos = transform.position;
         latestCorretRot = transform.rotation;
@@ -59,7 +59,7 @@ public class Movimiento : Photon.MonoBehaviour{
         {
             //MINE: local player, simply enable the local scripts
             this.enabled = false;
-        }
+        }*/
     }
 	
 //----------------------------------------------------------------
@@ -106,7 +106,6 @@ public class Movimiento : Photon.MonoBehaviour{
 					if((movimiento-vel).magnitude > -1 || (movimiento-vel).magnitude < 1)
 					{
 						rigidbody.AddForce((movimiento- transform.position).normalized*3);
-						Debug.Log(vel.magnitude);
 						//rigidbody.AddForce(new Vector3(10,0.5f,10));
 					}
 					
@@ -172,7 +171,7 @@ public class Movimiento : Photon.MonoBehaviour{
 	}
 	//sincronizacion con el servidor
 	
-	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+	/*public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.isWriting)
         {
@@ -186,5 +185,5 @@ public class Movimiento : Photon.MonoBehaviour{
             latestCorrectPos = (Vector3)stream.ReceiveNext();
             latestCorretRot = (Quaternion)stream.ReceiveNext();
         }
-    }
+    }*/
 }

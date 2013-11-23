@@ -2,7 +2,7 @@
 using System.Collections;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-[RequireComponent(typeof(PhotonView))]
+//[RequireComponent(typeof(PhotonView))]
 
 /*
  * Administra todos los poderes de un personaje
@@ -40,11 +40,11 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 		//Inicializa los componentes necesarios
 		mov = (Movimiento)GetComponent(typeof(Movimiento));
 		poderesEnCool = (Cooldown)GetComponent(typeof(Cooldown));
-		if (!photonView.isMine)
+		/*if (!photonView.isMine)
         {
             //MINE: local player, simply enable the local scripts
             this.enabled = false;
-        }
+        }*/
 	}
 	
 	void Update () {

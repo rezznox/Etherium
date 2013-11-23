@@ -10,14 +10,14 @@ public class Vida : MonoBehaviour {
 // Atributos
 //----------------------------------------------------------------------
 	
-	private double 	vida;				//Vida total del personaje
-	private bool  	enLava;				//Determina si el personaje esta sobre lava o no
-	private bool 	recibeDanio;		//Determina si un personaje esta reciviendo daño o no
-	private bool 	recibeHealing;		//Determina si un peersonaje se esta curando o no
-	private double 	danioRecibido;		//Determina el total de daño recivido
-	private double 	healingRecibido;	//Determina el total de vida curada
-	private float 	partesVida;			//Division del HUD de vida
-	
+	public 	GUISkin		skin;
+	private double 		vida;				//Vida total del personaje
+	private bool  		enLava;				//Determina si el personaje esta sobre lava o no
+	private bool 		recibeDanio;		//Determina si un personaje esta reciviendo daño o no
+	private bool 		recibeHealing;		//Determina si un peersonaje se esta curando o no
+	private double 		danioRecibido;		//Determina el total de daño recivido
+	private double 		healingRecibido;	//Determina el total de vida curada
+	private float 		partesVida;			//Division del HUD de vida
 //----------------------------------------------------------------------
 // Metodos
 //----------------------------------------------------------------------
@@ -60,8 +60,9 @@ public class Vida : MonoBehaviour {
 	 */
 	void OnGUI()
 	{
+		GUI.skin = skin;
 		int vidaAux = (int) vida;
-  		GUI.Box(new Rect(20, Screen.height-40, Screen.width-40, 25), vidaAux+"/100");
+  		//GUI.Label(new Rect(20, Screen.height-40, Screen.width-40, 25), vidaAux+"/100");
         GUI.Box(new Rect(20, Screen.height-40, (float)(vida * partesVida), 25), "");
 	}
 	
