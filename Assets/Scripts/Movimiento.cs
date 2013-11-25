@@ -2,7 +2,7 @@
 using System.Collections;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-//[RequireComponent(typeof(PhotonView))]
+[RequireComponent(typeof(PhotonView))]
 
 /*
  * Script que controla el movimiento de los personajes
@@ -51,7 +51,7 @@ public class Movimiento : Photon.MonoBehaviour{
 	}
 	public void Awake()
     {
-      /*  this.enabled = true;   // due to this, Update() is not called on the owner client.
+        this.enabled = true;   // due to this, Update() is not called on the owner client.
 
         latestCorrectPos = transform.position;
         latestCorretRot = transform.rotation;
@@ -59,7 +59,7 @@ public class Movimiento : Photon.MonoBehaviour{
         {
             //MINE: local player, simply enable the local scripts
             this.enabled = false;
-        }*/
+        }
     }
 	
 //----------------------------------------------------------------
@@ -171,7 +171,7 @@ public class Movimiento : Photon.MonoBehaviour{
 	}
 	//sincronizacion con el servidor
 	
-	/*public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.isWriting)
         {
@@ -185,5 +185,5 @@ public class Movimiento : Photon.MonoBehaviour{
             latestCorrectPos = (Vector3)stream.ReceiveNext();
             latestCorretRot = (Quaternion)stream.ReceiveNext();
         }
-    }*/
+    }
 }

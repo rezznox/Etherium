@@ -2,7 +2,7 @@
 using System.Collections;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-//[RequireComponent(typeof(PhotonView))]
+[RequireComponent(typeof(PhotonView))]
 
 /*
  * Administra todos los poderes de un personaje
@@ -24,6 +24,7 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 	private bool 		poderSeleccionado = false;	//Determina si un poder ha sido seleccionado o no
 	private Vector3 	posDestino;					//Vector destino del poder disparado
 	private Cooldown 	poderesEnCool;				//Relacion con el script de cooldown
+	private GameObject  clon;
 	
 	private Movimiento 	mov;						//Relacion con el script de movimiento
 	private Ray 		rayH;						//RayCast para determinar el vector de movimiento
@@ -40,14 +41,41 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 		//Inicializa los componentes necesarios
 		mov = (Movimiento)GetComponent(typeof(Movimiento));
 		poderesEnCool = (Cooldown)GetComponent(typeof(Cooldown));
-		/*if (!photonView.isMine)
+		if (!photonView.isMine)
         {
             //MINE: local player, simply enable the local scripts
             this.enabled = false;
-        }*/
+        }
 	}
 	
 	void Update () {
+		
+		//Selecciona la fireball con Q si el poder no esta en cooldown
+		if(Input.GetKeyDown(KeyCode.Q)){
+			if(fireballOC == 1){
+				poderActual = Fireball;
+				particulasActual = ParticulasFireball;
+				poderSeleccionado = true;
+				mov.ApagarMovimiento();
+				
+				clon = (GameObject)Instantiate(poderActual,transform.position, transform.rotation);
+				clon.transform.parent = transform;
+				instanciaPoder = (Poder)clon.GetComponent(typeof(Poder));
+				instanciaPoder.setCaster(this.gameObject);
+				instanciaPoder.setParticulas(particulasActual);
+				instanciaPoder.setId(Cooldown.FIREBALL);
+				Physics.IgnoreCollision(clon.collider,this.gameObject.collider);
+			}
+		}
+		
+		if(Input.GetKeyDown(KeyCode.W)){
+			if(teleportOC == 1){
+				poderActual = Teleport;
+				poderSeleccionado = true;
+				mov.ApagarMovimiento();
+			}
+		}
+		
 		if(Input.GetMouseButtonDown(0)){
 			if(poderSeleccionado){
 				//Lanza el poder
@@ -74,34 +102,6 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 						poderesEnCool.PonerEnCooldown(Cooldown.TELEPORT, instanciaPoder.darCooldown());
 					}
 				}		
-			}
-		}
-		
-		//Selecciona la fireball con Q si el poder no esta en cooldown
-		if(Input.GetKeyDown(KeyCode.Q)){
-			if(fireballOC == 1){
-				poderActual = Fireball;
-				particulasActual = ParticulasFireball;
-				poderSeleccionado = true;
-				mov.ApagarMovimiento();
-				
-				GameObject clon = (GameObject)Instantiate(poderActual,transform.position, transform.rotation);
-				clon.transform.parent = transform;
-				instanciaPoder = (Poder)clon.GetComponent(typeof(Poder));
-				instanciaPoder.setCaster(this.gameObject);
-				instanciaPoder.setParticulas(particulasActual);
-				instanciaPoder.setId(Cooldown.FIREBALL);
-				Physics.IgnoreCollision(clon.collider,this.gameObject.collider);
-				Debug.Log("Poder seleccionado");
-			}
-		}
-		
-		if(Input.GetKeyDown(KeyCode.W)){
-			if(teleportOC == 1){
-				poderActual = Teleport;
-				poderSeleccionado = true;
-				mov.ApagarMovimiento();
-				Debug.Log("Poder seleccionado");
 			}
 		}
 	}
