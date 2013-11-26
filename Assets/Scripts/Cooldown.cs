@@ -16,7 +16,7 @@ public class Cooldown : MonoBehaviour {
 	public const int FIREBALL = 0;
 	public const int TELEPORT = 1;
 	
-	// Lista que maneja los podres que se encuentran en cooldown
+	// Lista que maneja los poderes que se encuentran en cooldown
 	float[] listaCooldowns = new float[10];
 	
 	
@@ -37,7 +37,10 @@ public class Cooldown : MonoBehaviour {
 			else if(remain < 0){//Saca de a lista los poderes que han terminado
 				remain = 0;
 				listaCooldowns[i] = remain;
-				SendMessage("FinCooldown", FIREBALL);
+				if(i == 0)
+					SendMessage("FinCooldown", FIREBALL);
+				else if(i == 1)
+					SendMessage("FinCooldown", TELEPORT);
 			}
 			i++;
 		}

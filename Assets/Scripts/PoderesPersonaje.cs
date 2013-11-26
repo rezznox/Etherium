@@ -56,23 +56,21 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 				poderActual = Fireball;
 				particulasActual = ParticulasFireball;
 				poderSeleccionado = true;
-				mov.ApagarMovimiento();
 				
-				clon = (GameObject)Instantiate(poderActual,transform.position, transform.rotation);
-				clon.transform.parent = transform;
-				instanciaPoder = (Poder)clon.GetComponent(typeof(Poder));
-				instanciaPoder.setCaster(this.gameObject);
-				instanciaPoder.setParticulas(particulasActual);
-				instanciaPoder.setId(Cooldown.FIREBALL);
-				Physics.IgnoreCollision(clon.collider,this.gameObject.collider);
 			}
 		}
 		
 		if(Input.GetKeyDown(KeyCode.W)){
 			if(teleportOC == 1){
 				poderActual = Teleport;
+				particulasActual = ParticulasTeleport;
 				poderSeleccionado = true;
-				mov.ApagarMovimiento();
+				clon = (GameObject)PhotonNetwork.Instantiate(poderActual.name,transform.position, Quaternion.identity, 0);
+				clon.transform.parent = transform;
+				instanciaPoder = (Poder)clon.GetComponent(typeof(Poder));
+				instanciaPoder.setCaster(this.gameObject);
+				instanciaPoder.setId(Cooldown.FIREBALL);
+				clon.transform.parent = transform;
 			}
 		}
 		
@@ -80,28 +78,65 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 			if(poderSeleccionado){
 				//Lanza el poder
 				rayH = Camera.main.ScreenPointToRay (Input.mousePosition);
-				if(Physics.Raycast(rayH, out hit, 50))
+				if(Physics.Raycast(rayH, out hit, 50) && poderActual.name.Contains("Fireball") && fireballOC == 1)
 				{
 					//Mira hacia el pbjetivo
-					Vector3 newRotation = new Vector3(hit.point.x, 0, hit.point.z);
+					Vector3 newRotation = new Vector3(hit.point.x, 0.5f, hit.point.z);
 					transform.LookAt(newRotation);
+					clon = (GameObject)PhotonNetwork.Instantiate(poderActual.name,transform.position, Quaternion.identity, 0);
+					instanciaPoder = (Poder)clon.GetComponent(typeof(Poder));
+					instanciaPoder.setCaster(this.gameObject);
+					instanciaPoder.setParticulas(particulasActual);
+					instanciaPoder.setId(Cooldown.FIREBALL);
+					Vector3 v3 = new Vector3(hit.point.x, 0.5f, hit.point.z);
+					v3 = v3-transform.position;
+					v3 = v3.normalized;
+					v3 = v3*250;
+					v3.y=0.5f;
+					instanciaPoder.gameObject.rigidbody.AddForce(v3);
+					Physics.IgnoreCollision(clon.collider,this.gameObject.collider);
 					
 					//Lanzamiento
-					instanciaPoder.Disparar(hit.point.x, hit.point.z );
+					//instanciaPoder.Disparar(hit.point.x, hit.point.z );
 					poderSeleccionado = false;
 					//Evita que el personaje se mueva al punto de lanzamiento
-					mov.NoMoverA(new Vector3(hit.point.x,0,hit.point.z));
+					mov.NoMoverA(new Vector3(hit.point.x,0.5f,hit.point.z));
 					mov.EncenderMovimiento();
 					//Coloca el poder en cooldown
 					if(instanciaPoder.getId() == Cooldown.FIREBALL){
 						fireballOC = 0;
 						poderesEnCool.PonerEnCooldown(Cooldown.FIREBALL, instanciaPoder.darCooldown());
 					}
-					else if(instanciaPoder.getId() == Cooldown.TELEPORT){
+				}
+				else if(Physics.Raycast(rayH, out hit, 50) && poderActual.name.Contains("Teleport") && teleportOC == 1)
+				{
+					Vector3 elVectorcito = new Vector3(hit.point.x, 0.5f ,hit.point.z);
+					elVectorcito = elVectorcito-transform.position;
+					if(elVectorcito.magnitude > instanciaPoder.distanciaLimite)
+					{
+						elVectorcito = elVectorcito.normalized;
+						elVectorcito = elVectorcito*instanciaPoder.distanciaLimite;
+						elVectorcito.y = 0.5f;
+						transform.position += elVectorcito;
+						elVectorcito = transform.position;
+						elVectorcito.y = 0.5f;
+						transform.position = elVectorcito;
+					}
+					else
+					transform.position = new Vector3(hit.point.x, 0.5f ,hit.point.z);
+					
+					mov.NoMoverA(new Vector3(hit.point.x,0.5f,hit.point.z));
+					mov.EncenderMovimiento();
+					instanciaPoder.setParticulas(particulasActual);
+					instanciaPoder.setId(Cooldown.TELEPORT);
+					instanciaPoder.empezarTimer();
+					poderSeleccionado = false;
+					
+					if(instanciaPoder.getId() == Cooldown.TELEPORT){
 						teleportOC = 0;
 						poderesEnCool.PonerEnCooldown(Cooldown.TELEPORT, instanciaPoder.darCooldown());
 					}
-				}		
+				}
 			}
 		}
 	}
@@ -125,5 +160,13 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 		if(IDPoder == Cooldown.FIREBALL){
 			fireballOC = 1;	
 		}
+		else if(IDPoder == Cooldown.TELEPORT)
+		{
+			teleportOC = 1;
+		}
+	}
+	public bool getPoderSeleccionado()
+	{
+		return poderSeleccionado;
 	}
 }

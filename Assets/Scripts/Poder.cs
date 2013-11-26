@@ -26,6 +26,14 @@ public class Poder: MonoBehaviour{
 	private Transform 	particulas;
 	private bool 		particulaInstanceadas = false;
 	
+	private bool timing;
+	private float countdown;
+	public float tiempo;
+	
+	public float distanciaLimite;
+	private Vector3 posicionAnterior;
+	public bool hayLimite;
+	
 //-----------------------------------------------------------------
 // Metodos
 //-----------------------------------------------------------------
@@ -33,26 +41,26 @@ public class Poder: MonoBehaviour{
 	void Update(){
 		if(disparar){
 			if(Id == Cooldown.FIREBALL){
-				transform.position = Vector3.MoveTowards(transform.position, destino, Time.deltaTime * 7);
+				//transform.position = Vector3.MoveTowards(transform.position, destino, Time.deltaTime * 7);
 			}
 			else if(Id == Cooldown.TELEPORT){
 				Debug.Log("Teleport!!!!!");
 			}
 		}
 		
-		if(mousePosX-transform.position.x> -10E-2 && mousePosX-transform.position.x < 10E-2
-					&& mousePosZ-transform.position.z> -10E-2 && mousePosZ-transform.position.z < 10E-2)
-		{
-			Destroy(this.gameObject);	
-		}
+		//if(mousePosX-transform.position.x> -10E-2 && mousePosX-transform.position.x < 10E-2
+		//			&& mousePosZ-transform.position.z> -10E-2 && mousePosZ-transform.position.z < 10E-2)
+		//{
+		//	Destroy(this.gameObject);	
+		//}
 		
 		if(!particulaInstanceadas && particulas != null)
 		{
-			Object objeto = Instantiate(particulas, transform.position, transform.rotation);
-			Transform t = (Transform)objeto;
-			particulaInstanceadas = true;
-			t.parent = transform;
-			t.name = "Fuego!";
+				Object objeto = Instantiate(particulas, transform.position, transform.rotation);
+				Transform t = (Transform)objeto;
+				particulaInstanceadas = true;
+				t.parent = transform;
+				t.name = "Fuego!";
 		}
 	}
 	
@@ -67,7 +75,7 @@ public class Poder: MonoBehaviour{
 		Vida vidaObjetivo = (Vida)objetivo.GetComponent(typeof(Vida));
 		if (objetivo.CompareTag ("Jugador")){
 			Vector3 target = new Vector3((objetivo.transform.position.x + posicionColision.x*4), objetivo.transform.position.y,(objetivo.transform.position.z + posicionColision.z*4));
-			iTween.MoveTo(objetivo, target, 10);
+			//iTween.MoveTo(objetivo, target, 10);
 			vidaObjetivo.hayDanio(dano);
 			Destroy(this.gameObject);
 		}
@@ -107,7 +115,8 @@ public class Poder: MonoBehaviour{
 	}
 	
 	public void setCaster(GameObject nCaster){
-		caster = nCaster;	
+		caster = nCaster;
+		posicionAnterior = transform.position;
 	}
 	
 	public void setParticulas(Transform sistema)
@@ -121,5 +130,30 @@ public class Poder: MonoBehaviour{
 	
 	public int getId(){
 		return Id;	
+	}
+	public void empezarTimer()
+	{
+		timing = true;
+		countdown = 0;
+	}
+	void FixedUpdate()
+	{
+		if(timing)
+		{
+			//Time.deltaTime es el tiempo que se demora unity en hacer un update
+			countdown += Time.deltaTime;
+			if((countdown) > tiempo)
+			{
+				Destroy(gameObject);
+			}
+		}
+		//parte donde se le impone un limite de distancia al spell
+		if(hayLimite)
+		{
+			distanciaLimite -= Vector3.Distance(posicionAnterior, transform.position);
+			posicionAnterior = transform.position;
+			if(distanciaLimite <= 0)
+				Destroy(gameObject);
+		}
 	}
 }

@@ -33,6 +33,7 @@ public class Movimiento : Photon.MonoBehaviour{
 	private int 		contadorMuestreos;
 	private bool 		esSeguido = false;
 	private bool 		hayGolpe = true;
+	private PoderesPersonaje poderes;
 	
 	/*
 	 * Variables de sincronizacion
@@ -47,7 +48,7 @@ public class Movimiento : Photon.MonoBehaviour{
 		destinoFuerza = destinoCalculado;
 		movimiento = new Vector3(0,0,0);
 		hayFuerzaExterna = true;
-		
+		poderes = (PoderesPersonaje)GetComponent("PoderesPersonaje");
 	}
 	public void Awake()
     {
@@ -67,7 +68,7 @@ public class Movimiento : Photon.MonoBehaviour{
 //----------------------------------------------------------------
 	
 	void Update () {
-		if(Input.GetMouseButtonDown(0)){
+		if(Input.GetMouseButtonDown(0) && !poderes.getPoderSeleccionado()){
 			//Determina la posicion objetivo
 			rayH = Camera.main.ScreenPointToRay (Input.mousePosition);
 			EncenderMovimiento();
@@ -79,12 +80,12 @@ public class Movimiento : Photon.MonoBehaviour{
 			//rigidbody.AddForce(500,0.5f,500);
 			
 		}
-		if(Input.GetMouseButtonDown(1))
-		{
-			rigidbody.AddForce(new Vector3(800,0.5f,800));
+		//if(Input.GetMouseButtonDown(1))
+		//{
+		//	rigidbody.AddForce(new Vector3(800,0.5f,800));
 				//ri
-			hayGolpe = false;
-		}
+		//	hayGolpe = false;
+		//}
 		
 	}
 	public void FixedUpdate()
@@ -144,8 +145,6 @@ public class Movimiento : Photon.MonoBehaviour{
 	 * Habilita el movimiento
 	 */
 	public void EncenderMovimiento(){
-		mousePosX = 0;
-		mousePosZ = 0;
 		movPermitido = true;
 	}
 	

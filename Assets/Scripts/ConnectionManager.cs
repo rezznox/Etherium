@@ -6,7 +6,7 @@ public class ConnectionManager : MonoBehaviour {
 	public GameObject playerPrefab1;
 	public GameObject playerPrefab2;
 	
-	//private Movimiento mo;
+	private Movimiento mo;
 	// Use this for initialization
 	void Start () {
 		ConnectToServer();
@@ -35,8 +35,8 @@ public class ConnectionManager : MonoBehaviour {
 		{
 			PhotonNetwork.Instantiate(this.playerPrefab2.name, new Vector3(-7.88836f, 0.5f, -7.247649f), Quaternion.identity, 0);
 			Debug.Log("isntanceo segundo");
-			//mo = playerPrefab1.GetComponent<Movimiento>();
-			//mo.enabled = false;
+			mo = playerPrefab1.GetComponent<Movimiento>();
+			mo.enabled = false;
 		}
 	}
 }
