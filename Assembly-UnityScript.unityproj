@@ -44,30 +44,36 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\UnderstandBasicsOfCollisions\10_TriggerInScene\_JSscript\GateScript.js" />
-     <Compile Include="Assets\UnderstandBasicsOfCollisions\10_TriggerInScene\_JSscript\LiftDetect.js" />
-     <Compile Include="Assets\UnderstandBasicsOfCollisions\10_TriggerInScene\_JSscript\PlayerMove.js" />
-     <Compile Include="Assets\UnderstandBasicsOfCollisions\1_FirstCollision\_JSscript\script1.js" />
-     <Compile Include="Assets\UnderstandBasicsOfCollisions\1_FirstCollision\_JSscript\script2.js" />
-     <Compile Include="Assets\UnderstandBasicsOfCollisions\2_MultiCollisions\_JSscript\script21.js" />
-     <Compile Include="Assets\UnderstandBasicsOfCollisions\3_BulletCollisions\_JSscript\GUIScore1.js" />
-     <Compile Include="Assets\UnderstandBasicsOfCollisions\3_BulletCollisions\_JSscript\bulletScript1.js" />
-     <Compile Include="Assets\UnderstandBasicsOfCollisions\3_BulletCollisions\_JSscript\gunScript1.js" />
-     <Compile Include="Assets\UnderstandBasicsOfCollisions\3_BulletCollisions\_JSscript\planescript1.js" />
-     <Compile Include="Assets\UnderstandBasicsOfCollisions\4_BulletHowitzer\_JSscript\GUIScore.js" />
-     <Compile Include="Assets\UnderstandBasicsOfCollisions\4_BulletHowitzer\_JSscript\bulletScript.js" />
-     <Compile Include="Assets\UnderstandBasicsOfCollisions\4_BulletHowitzer\_JSscript\gunScript.js" />
-     <Compile Include="Assets\UnderstandBasicsOfCollisions\4_BulletHowitzer\_JSscript\planeScript.js" />
-     <Compile Include="Assets\UnderstandBasicsOfCollisions\5_PullRay\_JSscript\GUIScore2.js" />
-     <Compile Include="Assets\UnderstandBasicsOfCollisions\5_PullRay\_JSscript\gunScript2.js" />
-     <Compile Include="Assets\UnderstandBasicsOfCollisions\6_DroidArena\_JSscript\Droid.js" />
-     <Compile Include="Assets\UnderstandBasicsOfCollisions\7_MultiDroidArena\_JSscript\Droid2.js" />
-     <Compile Include="Assets\UnderstandBasicsOfCollisions\8_FirstTrigger\_JSscript\Cube1Script.js" />
-     <Compile Include="Assets\UnderstandBasicsOfCollisions\8_FirstTrigger\_JSscript\Cube2Script.js" />
-     <Compile Include="Assets\UnderstandBasicsOfCollisions\9_TriggerForGate\_JSscript\Cube11Script.js" />
-     <Compile Include="Assets\UnderstandBasicsOfCollisions\9_TriggerForGate\_JSscript\Cube21Script.js" />
+     <Compile Include="Assets\Procedural examples\Sources\CrumpleMesh.js" />
+     <Compile Include="Assets\Procedural examples\Sources\ExtrudedMeshTrail.js" />
+     <Compile Include="Assets\Procedural examples\Sources\FractalTexture.js" />
+     <Compile Include="Assets\Procedural examples\Sources\HeightmapGenerator.js" />
+     <Compile Include="Assets\Procedural examples\Sources\InitialRigidbodyVelocity.js" />
+     <Compile Include="Assets\Procedural examples\Sources\MouseOrbit.js" />
+     <Compile Include="Assets\Procedural examples\Sources\PaintVertices.js" />
+     <Compile Include="Assets\Procedural examples\Sources\SinusCurveModifier.js" />
+     <Compile Include="Assets\Procedural examples\Sources\SmoothRandomPosition.js" />
+     <Compile Include="Assets\Procedural examples\Sources\TronTrail.js" />
+     <Compile Include="Assets\Procedural examples\Sources\Twist.js" />
+     <Compile Include="Assets\Procedural examples\Sources\~ControlScripts\DragTransform.js" />
+     <Compile Include="Assets\Procedural examples\Sources\~ControlScripts\KeyboardOrbit.js" />
+     <Compile Include="Assets\Procedural examples\Sources\~ControlScripts\VPS.js" />
+     <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
+     <None Include="Assets\Plugins\release_history.txt" />
+     <None Include="Assets\Plugins\Photon3Unity3D.xml" />
+     <None Include="Assets\Standard Assets\Water (Basic)\Sources\Shaders\FX-Water Simple.shader" />
      <None Include="Assets\iTween\ReadMe!\ReadMe!.txt" />
-     <None Include="Assets\UnderstandBasicsOfCollisions\readme.txt" />
+     <None Include="Assets\Photon Unity Networking\readme.txt" />
+     <None Include="Assets\Photon Unity Networking\changelog.txt" />
+ <Reference Include="Photon3Unity3D">
+ <HintPath>Assets\Plugins\Photon3Unity3D.dll</HintPath>
+ </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{6FBA8ABA-D9E5-5955-FDD0-88CF45CBED95}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
+    <ProjectReference Include="Assembly-UnityScript-firstpass.unityproj">
+      <Project>{A8F0377D-37B2-9FA1-3241-765B21EF159A}</Project>      <Name>Assembly-UnityScript-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

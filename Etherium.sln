@@ -9,6 +9,8 @@ Project("{186B80A3-FB4F-617D-848A-1A85FB073A3C}") = "Etherium", "Assembly-CSharp
 EndProject
 Project("{186B80A3-FB4F-617D-848A-1A85FB073A3C}") = "Etherium", "Assembly-UnityScript-firstpass.unityproj", "{A8F0377D-37B2-9FA1-3241-765B21EF159A}"
 EndProject
+Project("{186B80A3-FB4F-617D-848A-1A85FB073A3C}") = "Etherium", "Assembly-UnityScript.unityproj", "{4251592C-44A6-0C39-EBB6-3119CD0AECB9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,11 +33,15 @@ Global
 		{A8F0377D-37B2-9FA1-3241-765B21EF159A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8F0377D-37B2-9FA1-3241-765B21EF159A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8F0377D-37B2-9FA1-3241-765B21EF159A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4251592C-44A6-0C39-EBB6-3119CD0AECB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4251592C-44A6-0C39-EBB6-3119CD0AECB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4251592C-44A6-0C39-EBB6-3119CD0AECB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4251592C-44A6-0C39-EBB6-3119CD0AECB9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-																																																																																						GlobalSection(MonoDevelopProperties) = preSolution
+																																																																																									GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Assembly-CSharp.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1

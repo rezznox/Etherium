@@ -2,11 +2,8 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\PoderesPersonaje.cs">
     <Files>
-      <File FileName="Assets\Scripts\ConnectionManager.cs" Line="30" Column="24" />
-      <File FileName="Assets\Scripts\Movimiento.cs" Line="75" Column="15" />
-      <File FileName="Assets\Scripts\PoderesPersonaje.cs" Line="123" Column="41" />
-      <File FileName="Assets\Scripts\Poder.cs" Line="137" Column="17" />
-      <File FileName="Assets\Scripts\Cooldown.cs" Line="35" Column="32" />
+      <File FileName="Assets\Procedural examples\Sources\LightningBolt.cs" Line="8" Column="27" />
+      <File FileName="Assets\Scripts\PoderesPersonaje.cs" Line="80" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

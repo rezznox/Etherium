@@ -15,6 +15,7 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 	
 	public GameObject 	Fireball;					//Instancia del prefab de la fireball
 	public GameObject 	Teleport;					//Instancia del prefab del teleport
+	public GameObject 	Bolt;						//Instancia del prefab del bolt
 	public Transform 	ParticulasFireball;			//Sistema de particulas para la fireball
 	public Transform 	ParticulasTeleport;			//Sistema de particulas para el teleport
 	
@@ -32,6 +33,7 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 	
 	private int 		fireballOC = 1;				//Determina si la fireball esta en cooldown o no
 	private int 		teleportOC = 1;				//Determina si el teleport esta en cooldown o no
+	private int 		boltOC = 1;					//Determina si el bolt esta en cooldown o no
 	
 //-------------------------------------------------------------
 // Metodos
@@ -72,6 +74,12 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 				instanciaPoder.setId(Cooldown.FIREBALL);
 				clon.transform.parent = transform;
 			}
+		}
+		
+		if(Input.GetKeyDown(KeyCode.E)){
+			clon = (GameObject)GameObject.Instantiate(Bolt);
+			LightningBolt lb = (LightningBolt)clon.GetComponent(typeof(LightningBolt));
+			lb.SetTarget(transform);
 		}
 		
 		if(Input.GetMouseButtonDown(0)){
