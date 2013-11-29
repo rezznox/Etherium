@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
+[RequireComponent(typeof(PhotonView))]
 /*
  * Controla la desaparicion paulatina del terreno
  */
-public class TimerTerreno : MonoBehaviour {
+public class TimerTerreno : Photon.MonoBehaviour {
 	
 //---------------------------------------------------------------
 // Atributos
@@ -23,6 +25,10 @@ public class TimerTerreno : MonoBehaviour {
 //---------------------------------------------------------------
 	
 	void Start () {
+		if(!PhotonNetwork.isMasterClient)
+		{
+			this.enabled = false;
+		}
 		tiempoInicio = Time.time;
 		tiempoAnterior = 0.0f;
 		marca = tiempo/numContadores;
@@ -43,4 +49,17 @@ public class TimerTerreno : MonoBehaviour {
 				Debug.Log("Se acabo el tiempo");
 		}
 	}
+	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.isWriting)
+        {
+            //We own this player: send the others our data
+            stream.SendNext(transform.localScale);
+        }
+        else
+        {
+            //Network player, receive data
+            //transform.localScale = (Vector3)stream.ReceiveNext();
+        }
+    }
 }

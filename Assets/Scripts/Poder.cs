@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
+[RequireComponent(typeof(PhotonView))]
 /*
  * Controla un poder que haya sido disparado por un personaje
  */
-public class Poder: MonoBehaviour{
+public class Poder: Photon.MonoBehaviour{
 	
 //-----------------------------------------------------------------
 // Atributos
@@ -33,18 +35,32 @@ public class Poder: MonoBehaviour{
 	public float distanciaLimite;
 	private Vector3 posicionAnterior;
 	public bool hayLimite;
+	public Vector3 latestCorrectPos;
+	public Quaternion latestCorretRot;
+	public GameObject GOparticulas;
+	
+	private LightningBolt scriptLight;
 	
 //-----------------------------------------------------------------
 // Metodos
 //-----------------------------------------------------------------
-	
+	void Awake()
+	{
+		this.enabled = true;   // due to this, Update() is not called on the owner client.
+
+		if (!photonView.isMine)
+        {
+            //MINE: local player, simply enable the local scripts
+            this.enabled = false;
+        }
+		scriptLight = null;
+	}
 	void Update(){
 		if(disparar){
 			if(Id == Cooldown.FIREBALL){
 				//transform.position = Vector3.MoveTowards(transform.position, destino, Time.deltaTime * 7);
 			}
 			else if(Id == Cooldown.TELEPORT){
-				Debug.Log("Teleport!!!!!");
 			}
 		}
 		
@@ -54,14 +70,14 @@ public class Poder: MonoBehaviour{
 		//	Destroy(this.gameObject);	
 		//}
 		
-		if(!particulaInstanceadas && particulas != null)
-		{
-				Object objeto = Instantiate(particulas, transform.position, transform.rotation);
-				Transform t = (Transform)objeto;
-				particulaInstanceadas = true;
-				t.parent = transform;
-				t.name = "Fuego!";
-		}
+		//if(!particulaInstanceadas && particulas != null)
+		//{
+		//		Object objeto = Instantiate(particulas, transform.position, transform.rotation);
+		//		Transform t = (Transform)objeto;
+		//		particulaInstanceadas = true;
+		//		t.parent = transform;
+		//		t.name = "Fuego!";
+		//}
 	}
 	
 	/*
@@ -69,18 +85,46 @@ public class Poder: MonoBehaviour{
 	 */
 	void OnCollisionEnter(Collision collision){
 		GameObject objetivo = collision.gameObject;
+		Debug.Log ("tag: "+objetivo.tag);
 		Vector3 posicionColision = transform.position;
-		posicionColision = (objetivo.transform.position-posicionColision);
 		
-		Vida vidaObjetivo = (Vida)objetivo.GetComponent(typeof(Vida));
+		Vida vidaObjetivo = (Vida)caster.GetComponent(typeof(Vida));
 		if (objetivo.CompareTag ("Jugador")){
-			Vector3 target = new Vector3((objetivo.transform.position.x + posicionColision.x*4), objetivo.transform.position.y,(objetivo.transform.position.z + posicionColision.z*4));
+			Vector3 target = new Vector3((objetivo.transform.position.x - posicionColision.x), objetivo.transform.position.y,(objetivo.transform.position.z - posicionColision.z));
+			target = target.normalized;
+			target = target*800;
+			target.y = 0.5f;
+			
 			//iTween.MoveTo(objetivo, target, 10);
-			vidaObjetivo.hayDanio(dano);
-			Destroy(this.gameObject);
+			//PhotonView pv = PhotonView.Get(this);
+			//pv.RPC ("AplicarFuerza", PhotonTargets.All, target.x, target.z);
+			Movimiento a = (Movimiento) caster.GetComponent(typeof(Movimiento));
+			Debug.Log (""+objetivo.name);
+			PhotonView b = objetivo.GetPhotonView();
+			a.golpe(b, target);
+			vidaObjetivo.danio(b, dano);
+			if(GOparticulas!=null)
+			PhotonNetwork.Destroy(GOparticulas);
+			PhotonNetwork.Destroy(this.gameObject);
 		}
-		else if(objetivo.CompareTag ("Arbol")){
-			Debug.Log("Golpee un arbol");	
+		else if(objetivo.CompareTag ("Arbol") && !this.name.Equals("Escudo")){
+			Debug.Log("Golpee un arbol");
+			PhotonNetwork.Destroy(this.gameObject);
+		}
+		else if(objetivo.CompareTag("Bloqueable"))
+		{
+			Debug.Log("Angulo colision: ");
+			if(objetivo.name.Equals("Rayo"))
+			{
+			}
+			else if(objetivo.name.Contains("Fireball"))
+			{
+				Vector3 velo = objetivo.rigidbody.velocity;
+				Vector3 vectorPerpendicular = velo-transform.position;
+				vectorPerpendicular.y = 0.5f;
+				float angulo = Mathf.Acos(Vector3.Dot(velo.normalized, vectorPerpendicular.normalized));
+				Debug.Log("Angulo colision: "+angulo);
+			}
 		}
 	}
 	
@@ -119,9 +163,10 @@ public class Poder: MonoBehaviour{
 		posicionAnterior = transform.position;
 	}
 	
-	public void setParticulas(Transform sistema)
+	public void setParticulas(Transform sistema, GameObject go)
 	{
 		particulas = sistema;
+		GOparticulas = go;
 	}
 	
 	public void setId(int id){
@@ -136,6 +181,10 @@ public class Poder: MonoBehaviour{
 		timing = true;
 		countdown = 0;
 	}
+	public void Destroy(LightningBolt c)
+	{
+		 scriptLight = c;
+	}
 	void FixedUpdate()
 	{
 		if(timing)
@@ -144,7 +193,13 @@ public class Poder: MonoBehaviour{
 			countdown += Time.deltaTime;
 			if((countdown) > tiempo)
 			{
-				Destroy(gameObject);
+				if(GOparticulas!=null)
+				PhotonNetwork.Destroy(GOparticulas);
+				PhotonNetwork.Destroy(gameObject);
+				if(scriptLight != null)
+				{
+					scriptLight.enabled = false;
+				}
 			}
 		}
 		//parte donde se le impone un limite de distancia al spell
@@ -153,7 +208,25 @@ public class Poder: MonoBehaviour{
 			distanciaLimite -= Vector3.Distance(posicionAnterior, transform.position);
 			posicionAnterior = transform.position;
 			if(distanciaLimite <= 0)
-				Destroy(gameObject);
+			{
+				PhotonNetwork.Destroy(GOparticulas);
+				PhotonNetwork.Destroy(gameObject);
+			}
 		}
 	}
+	public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.isWriting)
+        {
+            //We own this player: send the others our data
+            stream.SendNext(transform.position);
+            stream.SendNext(transform.rotation); 
+        }
+        else
+        {
+            //Network player, receive data
+            latestCorrectPos = (Vector3)stream.ReceiveNext();
+            latestCorretRot = (Quaternion)stream.ReceiveNext();
+        }
+    }
 }

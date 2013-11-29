@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-public class ConnectionManager : MonoBehaviour {
+[RequireComponent(typeof(PhotonView))]
+public class ConnectionManager : Photon.MonoBehaviour {
 
 	public GameObject playerPrefab1;
 	public GameObject playerPrefab2;
@@ -29,6 +31,7 @@ public class ConnectionManager : MonoBehaviour {
 		{
 			//instancear jugador
 			PhotonNetwork.Instantiate(this.playerPrefab1.name, new Vector3(7.785223f, 0.5f, -7.0f), Quaternion.identity, 0);
+			PhotonNetwork.InstantiateSceneObject("Terreno",new Vector3(0,0,0), Quaternion.identity, 0, null);
 			Debug.Log("isntanceo primero");
 		}
 		else

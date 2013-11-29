@@ -15,9 +15,15 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 	
 	public GameObject 	Fireball;					//Instancia del prefab de la fireball
 	public GameObject 	Teleport;					//Instancia del prefab del teleport
+	public GameObject   Escudo;						//Instancia del prefab del escudo
 	public GameObject 	Bolt;						//Instancia del prefab del bolt
 	public Transform 	ParticulasFireball;			//Sistema de particulas para la fireball
+	private GameObject 	GOParticulasFireball;
+	private GameObject 	GOParticulasTeleport;
 	public Transform 	ParticulasTeleport;			//Sistema de particulas para el teleport
+	private GameObject 	GOParticulasEscudo;
+	public Transform 	ParticulasEscudo;
+	public GameObject 	GOBolt;					//Transform objetivo para el Bolt
 	
 	private GameObject 	poderActual;				//Poder que se va a disparar
 	private Poder 		instanciaPoder;				//Instancia del poder que se esta disparando
@@ -34,6 +40,7 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 	private int 		fireballOC = 1;				//Determina si la fireball esta en cooldown o no
 	private int 		teleportOC = 1;				//Determina si el teleport esta en cooldown o no
 	private int 		boltOC = 1;					//Determina si el bolt esta en cooldown o no
+	private int			escudoOC = 1;
 	
 //-------------------------------------------------------------
 // Metodos
@@ -43,6 +50,8 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 		//Inicializa los componentes necesarios
 		mov = (Movimiento)GetComponent(typeof(Movimiento));
 		poderesEnCool = (Cooldown)GetComponent(typeof(Cooldown));
+		poderActual = new GameObject();
+		poderActual.name = "";
 		if (!photonView.isMine)
         {
             //MINE: local player, simply enable the local scripts
@@ -53,33 +62,45 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 	void Update () {
 		
 		//Selecciona la fireball con Q si el poder no esta en cooldown
-		if(Input.GetKeyDown(KeyCode.Q)){
-			if(fireballOC == 1){
-				poderActual = Fireball;
-				particulasActual = ParticulasFireball;
-				poderSeleccionado = true;
+		if(fireballOC == 1){
+			if(Input.GetKeyDown(KeyCode.Q) && !poderActual.name.Equals("Fireball")){
 				
+					poderActual = Fireball;
+					poderSeleccionado = true;
+			}
+			else if(poderActual.name.Equals("Fireball"))
+			{
+				poderActual.name = "";
 			}
 		}
 		
-		if(Input.GetKeyDown(KeyCode.W)){
+		if(Input.GetKeyDown(KeyCode.W) && !poderActual.name.Equals("Teleport")){
 			if(teleportOC == 1){
 				poderActual = Teleport;
-				particulasActual = ParticulasTeleport;
 				poderSeleccionado = true;
 				clon = (GameObject)PhotonNetwork.Instantiate(poderActual.name,transform.position, Quaternion.identity, 0);
-				clon.transform.parent = transform;
 				instanciaPoder = (Poder)clon.GetComponent(typeof(Poder));
 				instanciaPoder.setCaster(this.gameObject);
-				instanciaPoder.setId(Cooldown.FIREBALL);
+				instanciaPoder.setId(Cooldown.TELEPORT);
 				clon.transform.parent = transform;
 			}
 		}
 		
 		if(Input.GetKeyDown(KeyCode.E)){
-			clon = (GameObject)GameObject.Instantiate(Bolt);
-			LightningBolt lb = (LightningBolt)clon.GetComponent(typeof(LightningBolt));
-			lb.SetTarget(transform);
+			poderActual = Bolt;
+			poderSeleccionado = true;
+		}
+		if(Input.GetKeyDown(KeyCode.R)){
+			if(escudoOC == 1){
+				poderActual = Escudo;
+				poderSeleccionado = true;
+				clon = PhotonNetwork.Instantiate(poderActual.name,transform.position, Quaternion.identity, 0);
+				instanciaPoder = (Poder)clon.GetComponent(typeof(Poder));
+				instanciaPoder.setCaster(this.gameObject);
+				instanciaPoder.setId(Cooldown.ESCUDO);
+				instanciaPoder.setParticulas(clon.transform, clon);
+				clon.transform.parent = transform;
+			}
 		}
 		
 		if(Input.GetMouseButtonDown(0)){
@@ -91,18 +112,22 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 					//Mira hacia el pbjetivo
 					Vector3 newRotation = new Vector3(hit.point.x, 0.5f, hit.point.z);
 					transform.LookAt(newRotation);
-					clon = (GameObject)PhotonNetwork.Instantiate(poderActual.name,transform.position, Quaternion.identity, 0);
+					clon = PhotonNetwork.Instantiate(poderActual.name,transform.position, Quaternion.identity, 0);
+					Physics.IgnoreCollision(clon.collider,this.gameObject.collider);
 					instanciaPoder = (Poder)clon.GetComponent(typeof(Poder));
 					instanciaPoder.setCaster(this.gameObject);
-					instanciaPoder.setParticulas(particulasActual);
+					GOParticulasFireball = (GameObject)PhotonNetwork.Instantiate(ParticulasFireball.name,transform.position, Quaternion.identity, 0);
+					GOParticulasFireball.transform.parent = clon.transform;
+					particulasActual = GOParticulasFireball.transform;
+					instanciaPoder.setParticulas(particulasActual, GOParticulasFireball);
 					instanciaPoder.setId(Cooldown.FIREBALL);
+					instanciaPoder.tag = "Bloqueable";
 					Vector3 v3 = new Vector3(hit.point.x, 0.5f, hit.point.z);
 					v3 = v3-transform.position;
 					v3 = v3.normalized;
-					v3 = v3*250;
+					v3 = v3*600;
 					v3.y=0.5f;
 					instanciaPoder.gameObject.rigidbody.AddForce(v3);
-					Physics.IgnoreCollision(clon.collider,this.gameObject.collider);
 					
 					//Lanzamiento
 					//instanciaPoder.Disparar(hit.point.x, hit.point.z );
@@ -120,6 +145,9 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 				{
 					Vector3 elVectorcito = new Vector3(hit.point.x, 0.5f ,hit.point.z);
 					elVectorcito = elVectorcito-transform.position;
+					GOParticulasTeleport = (GameObject)PhotonNetwork.Instantiate(ParticulasTeleport.name,transform.position, Quaternion.identity, 0);
+					particulasActual = GOParticulasTeleport.transform;
+					instanciaPoder.setParticulas(particulasActual, GOParticulasTeleport);
 					if(elVectorcito.magnitude > instanciaPoder.distanciaLimite)
 					{
 						elVectorcito = elVectorcito.normalized;
@@ -135,7 +163,6 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 					
 					mov.NoMoverA(new Vector3(hit.point.x,0.5f,hit.point.z));
 					mov.EncenderMovimiento();
-					instanciaPoder.setParticulas(particulasActual);
 					instanciaPoder.setId(Cooldown.TELEPORT);
 					instanciaPoder.empezarTimer();
 					poderSeleccionado = false;
@@ -145,8 +172,64 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 						poderesEnCool.PonerEnCooldown(Cooldown.TELEPORT, instanciaPoder.darCooldown());
 					}
 				}
+				else if(poderActual.name.Contains("Escudo") && escudoOC == 1)
+				{
+					mov.NoMoverA(new Vector3(hit.point.x,0.5f,hit.point.z));
+					mov.EncenderMovimiento();
+					instanciaPoder.empezarTimer();
+					poderSeleccionado = false;
+					if(instanciaPoder.getId() == Cooldown.ESCUDO){
+						escudoOC = 0;
+						poderesEnCool.PonerEnCooldown(Cooldown.ESCUDO, instanciaPoder.darCooldown());
+					}
+				}
+				else if(poderActual.name.Contains("Bolt") && boltOC == 1){
+					rayH.origin = new Vector3(transform.position.x, 0.5f , transform.position.z);
+					Vector3 target = new Vector3(hit.point.x, 0.5f ,hit.point.z);
+					rayH.direction = target;
+					Physics.IgnoreCollision(this.collider, hit.collider);
+					RaycastHit[] hits;
+			        	hits = Physics.RaycastAll(rayH);
+			        	int i = 0;
+			        	while (i < hits.Length) {
+			            RaycastHit hitss = hits[i];
+			            Debug.Log ("tag Ray: " + hitss.collider.tag);
+						Debug.Log ("tag Ray: " + hitss.transform.tag);
+			            i++;
+			        }
+					bool collision = Physics.Raycast(rayH, out hit, 50);
+					
+					GOBolt = PhotonNetwork.Instantiate("BoltVacio",target, Quaternion.identity, 0);
+
+					clon = PhotonNetwork.Instantiate(poderActual.name,transform.position, Quaternion.identity, 0);
+					LightningBolt boltScript = (LightningBolt)clon.GetComponent(typeof(LightningBolt));
+					boltScript.SetTarget(GOBolt.transform);
+
+					instanciaPoder = (Poder)clon.GetComponent(typeof(Poder));
+					instanciaPoder.setParticulas(GOBolt.transform, GOBolt);
+					instanciaPoder.setCaster(this.gameObject);
+					instanciaPoder.empezarTimer();
+					instanciaPoder.Destroy(boltScript);
+					instanciaPoder.setId(Cooldown.BOLT);
+					if(collision)
+					{
+						GameObject colision = hit.collider.gameObject;
+						// Aqui se aplica la fuerza
+						Debug.Log("Le pego a algo: "+colision.name);
+					}
+					poderSeleccionado = false;
+					//Evita que el personaje se mueva al punto de lanzamiento
+					mov.NoMoverA(new Vector3(hit.point.x,0.5f,hit.point.z));
+					mov.EncenderMovimiento();
+					//Coloca el poder en cooldown
+					if(instanciaPoder.getId() == Cooldown.BOLT){
+						boltOC = 0;
+						poderesEnCool.PonerEnCooldown(Cooldown.BOLT, instanciaPoder.darCooldown());
+					}
+				}
 			}
 		}
+		//Debug.DrawLine(rayH.origin, rayH.direction, Color.cyan);
 	}
 	
 	/*
@@ -171,6 +254,14 @@ public class PoderesPersonaje : Photon.MonoBehaviour{
 		else if(IDPoder == Cooldown.TELEPORT)
 		{
 			teleportOC = 1;
+		}
+		else if(IDPoder == Cooldown.ESCUDO)
+		{
+			escudoOC = 1;
+		}
+		else if(IDPoder == Cooldown.BOLT)
+		{
+			boltOC = 1;
 		}
 	}
 	public bool getPoderSeleccionado()

@@ -34,6 +34,9 @@ public class Movimiento : Photon.MonoBehaviour{
 	private bool 		esSeguido = false;
 	private bool 		hayGolpe = true;
 	private PoderesPersonaje poderes;
+	private float knockback;
+	private int id;
+	private PhotonView a;
 	
 	/*
 	 * Variables de sincronizacion
@@ -61,6 +64,9 @@ public class Movimiento : Photon.MonoBehaviour{
             //MINE: local player, simply enable the local scripts
             this.enabled = false;
         }
+		id = PhotonNetwork.player.ID;
+		PhotonNetwork.sendRate = 120;
+		PhotonNetwork.sendRateOnSerialize = 120;
     }
 	
 //----------------------------------------------------------------
@@ -72,11 +78,18 @@ public class Movimiento : Photon.MonoBehaviour{
 			//Determina la posicion objetivo
 			rayH = Camera.main.ScreenPointToRay (Input.mousePosition);
 			EncenderMovimiento();
-			if(Physics.Raycast(rayH, out hit, 50))
-			{
+			RaycastHit[] hits;
+        	hits = Physics.RaycastAll(rayH);
+        	int i = 0;
+        	while (i < hits.Length) {
+            RaycastHit hit = hits[i];
+            if ((!hit.collider.tag.Equals("Jugador 1") || !hit.collider.tag.Equals("Jugador 2") || !hit.collider.tag.Equals("Arbol")) && hit.transform.tag.Equals("Terreno")) {
 				mousePosX = hit.point.x; 
 		    	mousePosZ = hit.point.z;
-			}
+					break;
+            }
+            i++;
+        }
 			//rigidbody.AddForce(500,0.5f,500);
 			
 		}
@@ -106,7 +119,7 @@ public class Movimiento : Photon.MonoBehaviour{
 					//transform.position = Vector3.MoveTowards(transform.position, movimiento, Time.deltaTime *2);
 					if((movimiento-vel).magnitude > -1 || (movimiento-vel).magnitude < 1)
 					{
-						rigidbody.AddForce((movimiento- transform.position).normalized*3);
+						rigidbody.AddForce((movimiento- transform.position).normalized*10);
 						//rigidbody.AddForce(new Vector3(10,0.5f,10));
 					}
 					
@@ -176,13 +189,32 @@ public class Movimiento : Photon.MonoBehaviour{
         {
             //We own this player: send the others our data
             stream.SendNext(transform.position);
-            stream.SendNext(transform.rotation); 
+            stream.SendNext(transform.rotation);
+			stream.SendNext(rigidbody.velocity);
         }
         else
         {
             //Network player, receive data
             latestCorrectPos = (Vector3)stream.ReceiveNext();
             latestCorretRot = (Quaternion)stream.ReceiveNext();
+			rigidbody.velocity = (Vector3)stream.ReceiveNext();
         }
     }
+	[RPC]
+	void AplicarFuerza(float x, float z, PhotonMessageInfo info)
+	{
+		Vector3 v3 = new Vector3(x, 0.5f, z);
+		knockback += 0.4f;
+		v3 = v3*knockback;
+		v3.y = 0.5f;
+		rigidbody.AddForce(v3);
+	}
+	public int darId()
+	{
+		return id;
+	}
+	public void golpe(PhotonView b, Vector3 t)
+	{
+		b.RPC("AplicarFuerza", PhotonTargets.Others, t.x, t.z);
+	}
 }

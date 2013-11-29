@@ -4,10 +4,15 @@
 */
 using UnityEngine;
 using System.Collections;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
-public class LightningBolt : MonoBehaviour
+[RequireComponent(typeof(PhotonView))]
+
+
+public class LightningBolt : Photon.MonoBehaviour
 {
-	public Transform target;
+	private Transform target;
+	private bool emitir = false;
 	public int zigs = 100;
 	public float speed = 1f;
 	public float scale = 1f;
@@ -21,6 +26,11 @@ public class LightningBolt : MonoBehaviour
 	
 	void Start()
 	{
+		this.enabled = true;
+		if(!photonView.isMine)
+		{
+			this.enabled = false;
+		}
 		oneOverZigs = 1f / (float)zigs;
 		particleEmitter.emit = false;
 
@@ -36,7 +46,8 @@ public class LightningBolt : MonoBehaviour
 		float timex = Time.time * speed * 0.1365143f;
 		float timey = Time.time * speed * 1.21688f;
 		float timez = Time.time * speed * 2.5564f;
-		
+
+		if(emitir){
 		for (int i=0; i < particles.Length; i++)
 		{
 			Vector3 position = Vector3.Lerp(transform.position, target.position, oneOverZigs * (float)i);
@@ -59,9 +70,11 @@ public class LightningBolt : MonoBehaviour
 			if (endLight)
 				endLight.transform.position = particles[particles.Length - 1].position;
 		}
+		}
 	}
 	
 	public void SetTarget(Transform nTarget){
-			target = nTarget;
+		target = nTarget;
+		emitir = true;
 	}
 }

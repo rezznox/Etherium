@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
+[RequireComponent(typeof(PhotonView))]
 /*
  * Administra la vida de un personaje
  */
-public class Vida : MonoBehaviour {
+public class Vida : Photon.MonoBehaviour {
 	
 //----------------------------------------------------------------------
 // Atributos
@@ -23,6 +25,11 @@ public class Vida : MonoBehaviour {
 //----------------------------------------------------------------------
 	
 	void Start () {
+		this.enabled = true;
+		if(!photonView.isMine)
+		{
+			this.enabled = false;
+		}
 		vida = 100;
 		recibeDanio = false;
 		recibeHealing = false;
@@ -41,7 +48,7 @@ public class Vida : MonoBehaviour {
 		}
 		else if(vida <=0) //Destruye al personaje si la vida llega a 0
 		{
-			Destroy (gameObject);
+			PhotonNetwork.Destroy (gameObject);
 		}
 		if(recibeDanio) //Reduce el nivel de vida
   		{
@@ -115,10 +122,15 @@ public class Vida : MonoBehaviour {
 	}
 	
 	//Determina la cantidad de daño causado
-	public void hayDanio(double danio)
+	[RPC]
+	public void hayDanio(double danio, PhotonMessageInfo info)
 	{
 		recibeDanio = true;
 		danioRecibido = danio;
+	}
+	public void danio(PhotonView pv, double danio)
+	{
+		pv.RPC("hayDanio", PhotonTargets.Others, danio);
 	}
 	
 	//Determina la cantidad de daño curado
